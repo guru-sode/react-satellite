@@ -4,26 +4,46 @@ class Position extends Component {
   constructor() {
     super();
     this.state = {
-      latitude: 0,
-      longitude: 0,
-      timestamp: 0
+      latitude: [],
+      longitude: [],
+      timestamp: []
     };
   }
+    componentDidMount = () => {
+      let lat=[];
+      let lon=[];
+      let time=[];
+      let _this =this;
+      setInterval(()=>{
+          console.log(this.state);
+          fetch('http://api.open-notify.org/iss-now.json')
+          .then(response => response.json())
+          .then(data => {
+             lat.push(data['iss_position']['latitude']);
+             lon.push(data['iss_position']['longitude']);
+             time.push(data['timestamp']);
+             _this.setState({
+              latitude: lat,
+              longitude: lon,
+              timestamp: time
+          }); 
+         });
+      },5000)
+          
+    };
 
-  componentDidMount = () => {
-    fetch('http://api.open-notify.org/iss-now.json')
-      .then(response => response.json())
-      .then(data => {
-        const lat=data['iss_position']['latitude'];
-        const lon=data['iss_position']['longitude'];
-        const time=data['timestamp'];
-        this.setState({
-            latitude: lat,
-            longitude: lon,
-            timestamp: time
-        });
-      });
-  };
+    renderTable(){
+      const pos=[];
+      for(let i=0;i<this.state.latitude.length;i++){
+        pos.push(<tr></tr>);
+        pos.push(<td key='this.state.latitude[i]'>{this.state.latitude[i]}</td>);
+        pos.push(<td key='this.state.longitude[i]'>{this.state.longitude[i]}</td>);
+        pos.push(<td key='this.state.timestamp[i]'>{this.state.timestamp[i]}</td>);
+      }
+      return pos;
+    }
+
+
   render() {
     return (
       <div className="position-table">
@@ -32,16 +52,12 @@ class Position extends Component {
             <tr>
               <th>Latitude</th>
               <th>Longitude</th>
-              <th>Timestamp</th>
+              <th>Timestamp(Unix)</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>{this.state.latitude}</td>
-              <td>{this.state.longitude}</td>
-              <td>{this.state.timestamp}</td>
-            </tr>
-          </tbody>
+          {/* <tbody> */}
+            {this.renderTable()}
+          {/* </tbody> */}
         </table>
       </div>
     );

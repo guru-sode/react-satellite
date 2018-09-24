@@ -19,24 +19,26 @@ class People extends Component {
     }
 
     componentDidMount = () => {
-        fetch('http://api.open-notify.org/astros.json')
-        .then((response) => response.json())
-        .then((data) => {
-            const name=[];
-            const craft = [];
-            data.people.forEach(object => {
-                craft.push(object.craft)
-                name.push(object.name)
+        let _this=this;
+        setInterval(()=>{
+            fetch('http://api.open-notify.org/astros.json')
+            .then((response) => response.json())
+            .then((data) => {
+                const name=[];
+                const craft = [];
+                data.people.forEach(object => {
+                    craft.push(object.craft)
+                    name.push(object.name)
+                });
+                _this.setState({
+                    name,
+                    craft,
+                    numOfPeople:data["number"]
+                });
             });
-            this.setState({
-                name,
-                craft,
-                numOfPeople:data["number"]
-            });
-        });
+        },1000);
     };
     render() { 
-        console.log(this.renderList())
                 return (
             <div className='people'>
             <p>At this moment there are {this.state.numOfPeople} humans in space. They are:</p>
