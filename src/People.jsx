@@ -18,7 +18,7 @@ class People extends Component {
         return namesAndCraft;
     }
 
-    componentDidMount=()=>{
+    componentDidMount = () => {
         fetch('http://api.open-notify.org/astros.json')
         .then((response) => response.json())
         .then((data) => {
@@ -36,6 +36,7 @@ class People extends Component {
         });
     };
     render() { 
+        console.log(this.renderList())
                 return (
             <div className='people'>
             <p>At this moment there are {this.state.numOfPeople} humans in space. They are:</p>

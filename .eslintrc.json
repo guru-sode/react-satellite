@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "implicit-arrow-linebreak":"off" ,
+        "jsx-quotes":"off",
+        "no-undef":"off" ,
+        "no-use-before-define":"off",
+        
+
+
+    }
+}
