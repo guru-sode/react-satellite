@@ -1,51 +1,52 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './App.css';
 
 class People extends Component {
-    constructor(){
-        super();
-        this.state ={
-            numOfPeople:0 ,
-            name:[],
-            craft:[]
-        };
+    constructor(props){
+        super(props);
+        this.props.FETCH_NAMES;
     }
+
     renderList(){
         const namesAndCraft=[];
-        for(let i=0;i<this.state.name.length;i++){
-             namesAndCraft.push((<li className='list-group-item' key={this.state.name[i]}>{this.state.name[i]}, craft:{this.state.craft[i]}</li>));
+        for(let i=0;i<this.props.name.length;i++){
+             namesAndCraft.push((<li className='list-group-item' key={this.props.name[i]}>{this.props.name[i]}, craft:{this.props.craft[i]}</li>));
         }
         return namesAndCraft;
     }
 
     componentDidMount = () => {
-        let _this=this;
         setInterval(()=>{
-            fetch('http://api.open-notify.org/astros.json')
-            .then((response) => response.json())
-            .then((data) => {
-                const name=[];
-                const craft = [];
-                data.people.forEach(object => {
-                    craft.push(object.craft)
-                    name.push(object.name)
-                });
-                _this.setState({
-                    name,
-                    craft,
-                    numOfPeople:data["number"]
-                });
-            });
+            // this.props.FETCH_NAMES;
+            this.setState({});
         },1000);
     };
     render() { 
                 return (
             <div className='people'>
-            <p>At this moment there are {this.state.numOfPeople} humans in space. They are:</p>
+            <p>At this moment there are {this.props.numOfPeople} humans in space. They are:</p>
             <ul className='list-group'>{this.renderList()}</ul>
             </div>
         );
     }
 }
  
-export default People;
+const mapStateToProps = state => {
+    return {
+      numOfPeople:state.numOfPeople,
+      name: state.name,
+      craft:state.craft
+    };
+  };
+  
+  const mapDispatchToProps = dispatch => {
+    return {
+      FETCH_NAMES: dispatch({ type: 'FETCH_NAMES' }),
+    };
+  };
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(People);
